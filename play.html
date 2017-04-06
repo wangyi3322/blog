@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		ul,li{
+			list-style: none;
+		}
+		.music-box{
+			margin: 20px;
+			width: 300px;
+			height: 150px;
+			border:1px solid #ccc;
+		}
+		.btn-list{
+			float: left;
+		}
+		.btn-list li{
+			float: left;
+			width: 60px;
+			line-height: 60px;
+			text-align: center;
+			border: 1px solid #ccc;
+			border-radius: 50%;
+		}
+		.btn-list li:hover{
+			border: 1px solid #f60;	
+		}
+		.info{
+			float: left;
+		}
+	</style>
+
+</head>
+<body>
+<audio id="music" src="http://cloud.hunger-valley.com/music/玫瑰.mp3">你的浏览器不支持喔！</audio>
+
+	<div class="music-box">
+		<ul class="btn-list">
+			<li class="prev">prev</li>
+			<li class="play">play</li>
+			<li class="next">next</li>
+		</ul>
+		<div class="info">
+			<div class="title">Name</div>
+			<div class="url">auther</div>
+		</div>
+	</div>
+
+<script>
+
+	var audioObject = document.querySelector('#music')
+	audioObject.play();
+
+	var musicList = [
+		{
+			src:'http://cloud.hunger-valley.com/music/玫瑰.mp3',
+			title:'玫瑰',
+			auther:'贰佰'
+		},
+		{
+			src:'http://cloud.hunger-valley.com/music/ifyou.mp3',
+			title:'If You',
+			auther:'Big Bang'
+		}
+	]
+
+
+	var playBtn = document.querySelector('.play');
+	var nextBtn = document.querySelector('.next');
+	var prevBtn = document.querySelector('.prev');
+
+	playBtn.onclick = function(){
+		console.log('pause...');
+		var a = 1;
+		if( a = 1){
+			audioObject.pause();			
+			a = 0 ;
+		}else{			
+			audioObject.paly();
+			a = 1;
+		}				
+	}
+
+	nextBtn.onclick = function(){
+		audioObject.src = 'http://cloud.hunger-valley.com/music/ifyou.mp3';
+		console.log(audioObject.src);
+		audioObject.play();
+	}
+
+	prevBtn.onclick = function(){
+		audioObject.src = 'http://cloud.hunger-valley.com/music/玫瑰.mp3';
+		console.log(audioObject.src);
+		audioObject.play();
+	}
+
+</script>
+</body>
+</html>
