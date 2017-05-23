@@ -1,18 +1,18 @@
-# 一些组建、页面
+# 一些组件、页面
 
 
-1. Dialog组建
+1. Dialog组件
 - [预览](https://wangyi3322.github.io/effect-set/dialog/dialog.html) 
 - [代码](https://github.com/wangyi3322/effect-set/blob/master/dialog/dialog.js)
 - 调用方式  Dialog.open('你要输入的内容');;
 
 
-2. 返回顶部组建
+2. 返回顶部组件
 - [预览](https://wangyi3322.github.io/effect-set/goTop/goTop.html) 
 - [代码](https://github.com/wangyi3322/effect-set/blob/master/goTop/goTop.js)
 - 调用方式   GoTop();
 
-3. Toast组建
+3. Toast组件
 - [预览](https://wangyi3322.github.io/effect-set/toast/toast.html) 
 - [代码](https://github.com/wangyi3322/effect-set/blob/master/toast/toast.js)
 - 调用方式   Toast('你需要的内容',time); 
