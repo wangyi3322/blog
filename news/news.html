@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>瀑布流懒加载新闻</title>
+    <style>
+        ul,li,h4,p {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            color: #333;
+        }
+        .clearfix:after {
+            content: ' ';
+            display: block;
+            clear: both;
+        }
+        .page {
+            margin: 0 auto;
+        }
+        .warp {
+            position: relative;
+            padding: 20px;
+        }
+        .item {
+            position: absolute;        
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 280px;
+            opacity: 0;
+            transition: all 1s;
+            box-shadow: 0px 1px 3px rgba(0,0,0,.2);
+        }
+        .item>img {
+            width: 280px;
+        }
+        .item>.title {
+        	color: #666;
+            margin-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .item>.intor {
+            margin-top: 10px;
+        }
+        .hide {
+            display: none;
+        }
+        .loader {
+            margin: 0 auto;
+            width: 300px;
+            text-align: center;
+            visibility: hidden;
+        }
+    </style>	
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js"></script>
+</head>
+<body>
+
+    <div class="page">
+        <ul class="warp">
+            <li class="item hide">隐藏元素：用于获取宽度</li>
+        </ul>
+        <div class="loader">正在加载...</div>
+    </div>
+
+<script type="text/javascript">
+
+        var $warp = $('.warp');
+        var perPageCount = 9;
+        var curPage = 1;
+        var warpWidth = $warp.width();
+        var itemWidth = $('.item').outerWidth(true);
+        var colNum = parseInt(warpWidth/itemWidth);
+        var colArr = [];
+        for(var i = 0; i < colNum; i++){
+            colArr[i] = 0;
+        }
+        var clock; 
+        getData();       
+        $(window).on('scroll', function(){
+            if(clock){
+                clearTimeout(clock);
+            }      
+            clock = setTimeout(function(){
+                getData();
+            }, 300);
+        });
+    
+        function getData() {
+            $.ajax({
+                url: 'http://platform.sina.com.cn/slide/album_tech',
+                type: 'get',
+                dataType: 'jsonp',
+                jsonp: 'jsoncallback',
+                data: {
+                    app_key: '1271687855',
+                    num: perPageCount,
+                    page: curPage
+                }
+            }).done(function (ret) {               
+                if(ret.status.code === '0'){
+                    render(ret.data);
+                    curPage++;
+                }
+            }).fail(function () {
+                alert('系统异常，请稍后再试！')
+            })
+        }
+      
+        function render(newsData) {
+            $.each(newsData, function (idx, val) {
+                var $nodes = getHtmls(val);               
+                $nodes.find('img').on('load', function () {
+                    $nodes.appendTo($warp);
+                    waterFall($nodes);
+                });
+            });
+        }
+      
+        function getHtmls(news) {
+            var htmls='';
+            htmls += '<li class="item">';
+            htmls += '  <img src='+news.img_url+'>';
+            htmls += '  <h4 class="title">'+news.name+'</h4>';
+            htmls += '  <p class="intor">'+news.short_intro+'</p>';
+            htmls += '</li>';
+            return $(htmls);
+        }
+  
+        function waterFall(node) {
+            var itemHeight = node.outerHeight(true);
+            var minVal = Math.min.apply(null, colArr);
+            var minIdx = colArr.indexOf(minVal);
+            node.css({
+                top: minVal,
+                left: minIdx * itemWidth,
+                opacity: 1
+            });
+           
+            $('.page').css({
+                width: colNum * itemWidth
+            });
+            colArr[minIdx] +=  itemHeight;
+            $warp.height(Math.max.apply(null, colArr));
+        }
+    </script>
+</script>
+</body>
+</html>

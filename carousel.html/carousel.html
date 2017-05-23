@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		ul,li{
+			list-style: none;
+		}
+		.carousel{
+			position: relative;
+			margin: 20px auto;
+			width: 460px;
+			height: 200px;
+			overflow: hidden;
+		}
+		.clearfix:after{
+			content: '';
+			display: block;
+			clear: both
+		}
+		.carousel .imgCt{
+			position: relative;
+	
+		}
+		.carousel .imgCt>li {
+			float: left;
+		}
+		.carousel .imgCt>li img{			
+			width: 460px;
+			height: 200px;
+		}
+		.carousel .btn{
+			position: absolute;
+			top: 50%;
+			margin-top: -15px;
+			line-height: 30px;
+			width: 30px;
+			text-align: center;
+			color: #fff;
+			background: #000;
+			opacity: 0.5;		
+			border-radius: 50%;
+		}
+		.carousel .prev{
+			left: 6px;
+		}
+		.carousel .next{
+			right: 6px;
+		}
+		.btn-list{
+			position: absolute;
+			bottom: 10px;
+			width: 100%;
+			text-align: center;
+		}
+		.btn-list>li{
+			display: inline-block;
+			height: 8px;
+			width: 22px;		
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+		.btn-list>li.active{
+			background: #ccc;
+		}
+	</style>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="carousel">
+		<ul class="imgCt clearfix">
+			<li>
+				<img src="http://img.t.sinajs.cn/t5/skin/public/profile_cover/001.jpg">
+			</li>
+			<li>
+				<img src="http://img.t.sinajs.cn/t5/skin/public/profile_cover/002.jpg">
+			</li>
+			<li>
+				<img src="http://img.t.sinajs.cn/t5/skin/public/profile_cover/003.jpg">
+			</li>
+			<li>
+				<img src="http://img.t.sinajs.cn/t5/skin/public/profile_cover/004.jpg">
+			</li>
+		</ul>
+		<a class="btn prev">&lt;</a>
+		<a class="btn next">&gt;</a>
+		<ul class="btn-list">
+			<li class="active"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>			
+	</div>	
+
+	<script type="text/javascript">
+	   	var indexPage = 0;
+		var $imgCt = $('.imgCt');
+		var $li = $imgCt.find('li');
+		var $imgWidth = $imgCt.width();
+
+		$imgCt.css('left',-$imgWidth);
+		$imgCt.prepend($li.last().clone());
+		$imgCt.append($li.first().clone());	
+
+		$imgCt.width(($imgCt.find('li').length)* $imgWidth);
+
+		$('.next').on('click',function(){
+			playNext(1);
+		});
+
+		$('.prev').on('click',function(){
+			playPrev(1);
+
+		});	
+
+		$('.btn-list li').click(function(){
+			
+			var index = $(this).index();
+			if( index > indexPage){
+				playNext(index - indexPage );				
+			}else if( index < indexPage){
+				playPrev( indexPage - index);
+			}		
+
+			// $('.btn-list li').removeClass('active').eq(indexPage).addClass('active');	
+		});
+
+
+		function playPrev(len){			
+			$('.imgCt').animate({
+				left: '+=' + $imgWidth * len
+			},function(){
+				indexPage -= len;
+				console.log(indexPage);
+				if(indexPage < 0){		
+					indexPage = $li.length - 1;			
+					$imgCt.css({left: -$imgWidth* $li.length });						
+				}
+				btnMove();	
+			});
+		}	
+
+		function playNext(len){
+			$('.imgCt').animate({
+				left: '-=' + $imgWidth * len
+			},function(){
+				indexPage += len; 
+				console.log(indexPage);
+				if(indexPage >= $li.length){	
+					indexPage = 0;				
+					$imgCt.css({left: -$imgWidth});					
+				}
+				btnMove();		
+			});
+
+		}
+
+
+		function btnMove(){
+			$('.btn-list li').removeClass('active').eq(indexPage).addClass('active');
+
+		}
+	</script>
+</body> 
+</html>
