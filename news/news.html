@@ -63,88 +63,90 @@
         </ul>
         <div class="loader">正在加载...</div>
     </div>
-<script src="jquery-1.9.1.js"></script>
+<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
+$(function(){
+    var $warp = $('.warp');
+    var perPageCount = 9;
+    var curPage = 1;
+    var warpWidth = $warp.width();
+    var itemWidth = $('.item').outerWidth(true);
+    var colNum = parseInt(warpWidth/itemWidth);
+    var colArr = [];
+    for(var i = 0; i < colNum; i++){
+        colArr[i] = 0;
+    }
+    var clock; 
+    getData();       
+    $(window).on('scroll', function(){
+        if(clock){
+            clearTimeout(clock);
+        }      
+        clock = setTimeout(function(){
+            getData();
+        }, 300);
+    });
 
-        var $warp = $('.warp');
-        var perPageCount = 9;
-        var curPage = 1;
-        var warpWidth = $warp.width();
-        var itemWidth = $('.item').outerWidth(true);
-        var colNum = parseInt(warpWidth/itemWidth);
-        var colArr = [];
-        for(var i = 0; i < colNum; i++){
-            colArr[i] = 0;
-        }
-        var clock; 
-        getData();       
-        $(window).on('scroll', function(){
-            if(clock){
-                clearTimeout(clock);
-            }      
-            clock = setTimeout(function(){
-                getData();
-            }, 300);
-        });
-    
-        function getData() {
-            $.ajax({
-                url: 'http://platform.sina.com.cn/slide/album_tech',
-                type: 'get',
-                dataType: 'jsonp',
-                jsonp: 'jsoncallback',
-                data: {
-                    app_key: '1271687855',
-                    num: perPageCount,
-                    page: curPage
-                }
-            }).done(function (ret) {               
-                if(ret.status.code === '0'){
-                    render(ret.data);
-                    curPage++;
-                }
-            }).fail(function () {
-                alert('系统异常，请稍后再试！')
-            })
-        }
-      
-        function render(newsData) {
-            $.each(newsData, function (idx, val) {
-                var $nodes = getHtmls(val);               
-                $nodes.find('img').on('load', function () {
-                    $nodes.appendTo($warp);
-                    waterFall($nodes);
-                });
-            });
-        }
-      
-        function getHtmls(news) {
-            var htmls='';
-            htmls += '<li class="item">';
-            htmls += '  <img src='+news.img_url+'>';
-            htmls += '  <h4 class="title">'+news.name+'</h4>';
-            htmls += '  <p class="intor">'+news.short_intro+'</p>';
-            htmls += '</li>';
-            return $(htmls);
-        }
+    function getData() {
+        $.ajax({
+            url: 'http://platform.sina.com.cn/slide/album_tech',
+            type: 'get',
+            dataType: 'jsonp',
+            jsonp: 'jsoncallback',
+            data: {
+                app_key: '1271687855',
+                num: perPageCount,
+                page: curPage
+            }
+        }).done(function (ret) {               
+            if(ret.status.code === '0'){
+                render(ret.data);
+                curPage++;
+            }
+        }).fail(function () {
+            alert('系统异常，请稍后再试！')
+        })
+    }
   
-        function waterFall(node) {
-            var itemHeight = node.outerHeight(true);
-            var minVal = Math.min.apply(null, colArr);
-            var minIdx = colArr.indexOf(minVal);
-            node.css({
-                top: minVal,
-                left: minIdx * itemWidth,
-                opacity: 1
+    function render(newsData) {
+        $.each(newsData, function (idx, val) {
+            var $nodes = getHtmls(val);               
+            $nodes.find('img').on('load', function () {
+                $nodes.appendTo($warp);
+                waterFall($nodes);
             });
-           
-            $('.page').css({
-                width: colNum * itemWidth
-            });
-            colArr[minIdx] +=  itemHeight;
-            $warp.height(Math.max.apply(null, colArr));
-        }
-    </script>
+        });
+    }
+  
+    function getHtmls(news) {
+        var htmls='';
+        htmls += '<li class="item">';
+        htmls += '  <img src='+news.img_url+'>';
+        htmls += '  <h4 class="title">'+news.name+'</h4>';
+        htmls += '  <p class="intor">'+news.short_intro+'</p>';
+        htmls += '</li>';
+        return $(htmls);
+    }
+
+    function waterFall(node) {
+        var itemHeight = node.outerHeight(true);
+        var minVal = Math.min.apply(null, colArr);
+        var minIdx = colArr.indexOf(minVal);
+        node.css({
+            top: minVal,
+            left: minIdx * itemWidth,
+            opacity: 1
+        });
+       
+        $('.page').css({
+            width: colNum * itemWidth
+        });
+        colArr[minIdx] +=  itemHeight;
+        $warp.height(Math.max.apply(null, colArr));
+    }
+});
+
+
 </script>
 </body>
 </html>
