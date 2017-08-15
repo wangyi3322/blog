@@ -20,8 +20,8 @@
 
 
 5. 瀑布流加载新闻页
-- 仅支持本地预览
-- [代码](http://htmlpreview.github.io/?https://wangyi3322.github.io/effect-set/news/news.html)
+- [预览](http://htmlpreview.github.io/?https://wangyi3322.github.io/effect-set/news/news.html)
+- [代码](https://github.com/wangyi3322/effect-set/tree/master/news)
 - 通过jsonp方式来获取数据，使用瀑布流+懒加载渲染页面
 
 6. [防魔兽页面](https://wangyi3322.github.io/effect-set/wow/index.html)
