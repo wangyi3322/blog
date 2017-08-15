@@ -25,7 +25,7 @@ goTop.prototype = {
             //设置整个文档的顶部，而不是window的顶部
             $('html, body').animate({
                 scrollTop: 0
-            }, 1000);
+            }, 500);
         });
     }
 };
